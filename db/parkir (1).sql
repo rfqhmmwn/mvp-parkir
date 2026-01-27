@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost:3306
--- Waktu pembuatan: 27 Jan 2026 pada 03.01
+-- Waktu pembuatan: 27 Jan 2026 pada 03.20
 -- Versi server: 8.0.30
 -- Versi PHP: 8.1.10
 
@@ -30,13 +30,13 @@ SET time_zone = "+00:00";
 CREATE TABLE `booking` (
   `id` int NOT NULL,
   `slot_id` int NOT NULL,
-  `jenis` enum('mobil(5000)','motor(2000)') NOT NULL,
-  `plat` varchar(100) NOT NULL,
+  `jenis` enum('mobil(5000)','motor(2000)') COLLATE utf8mb4_general_ci NOT NULL,
+  `plat` varchar(100) COLLATE utf8mb4_general_ci NOT NULL,
   `jam_masuk` datetime DEFAULT NULL,
   `jam_keluar` datetime DEFAULT NULL,
-  `status` enum('selesai','belum') NOT NULL DEFAULT 'belum',
-  `durasi` varchar(100) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `status` enum('selesai','belum') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'belum',
+  `durasi` varchar(100) COLLATE utf8mb4_general_ci NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `booking`
@@ -68,8 +68,8 @@ INSERT INTO `booking` (`id`, `slot_id`, `jenis`, `plat`, `jam_masuk`, `jam_kelua
 CREATE TABLE `slot` (
   `id` int NOT NULL,
   `nomer` int NOT NULL,
-  `status` enum('tersedia','tidak') NOT NULL DEFAULT 'tersedia'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+  `status` enum('tersedia','tidak') COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'tersedia'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data untuk tabel `slot`
