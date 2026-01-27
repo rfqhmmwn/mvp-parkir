@@ -12,6 +12,8 @@
         <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
         <!-- Core theme CSS (includes Bootstrap)-->
         <link href="<?php echo base_url('assets_pesan/css/styles.css'); ?>" rel="stylesheet" />
+	    <script src="https://unpkg.com/toaster-ui@1.1.5/dist/main.js"></script>
+
     </head>
     <body>
         <!-- Product section-->
@@ -24,9 +26,8 @@
                         </div>
                         <div class="d-flex">
 							<form 
-								action="<?= site_url('index/do_beli'); ?>" 
-								method="post" 
 								class="d-flex align-items-center gap-3 flex-wrap"
+								id="form"
 							>
 
 								<div class="d-flex align-items-center gap-1">
@@ -37,7 +38,6 @@
 										name="plat"
 										class="form-control"
 										placeholder="Plat Nomor"
-										required
 										style="max-width: 200px;"
 									>
 								</div>
@@ -48,7 +48,6 @@
 										id="jenis"
 										name="jenis"
 										class="form-select"
-										required
 										style="max-width: 150px;"
 									>
 										<option value="">Pilih</option>
@@ -82,5 +81,41 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="<?php echo base_url('assets_pesan/js/scripts.js'); ?>"></script>
+		<script>
+			const form = document.getElementById('form');
+			form.addEventListener('submit', async function(event){
+				event.preventDefault();
+
+				const formData = new FormData(form);
+
+				const plat = formData.get('plat');
+				const jenis = formData.get('jenis');
+				const slot_id = formData.get('id');
+
+				const response = await fetch('<?php echo site_url('index/do_beli'); ?>', {
+					method: 'POST',
+					body: formData
+				});
+				
+
+				const result = await response.json();
+				console.log(result);
+				if (result.errors)
+				{
+					alert(result.errors);
+				}
+ 				else
+				{
+					if (result.status == false)
+					{
+						alert(result.message);
+					}
+					else
+					{   
+						window.location.href = '<?php echo site_url('orders/print/'); ?>' + result.id;
+					}
+				}
+			})
+		</script>
     </body>
 </html>

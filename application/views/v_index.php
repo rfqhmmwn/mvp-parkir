@@ -17,24 +17,7 @@
         <!-- Section-->
         <section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-					<?php foreach($list_slot as $slot): ?>
-                    <div class="col mb-5">
-                        <div class="card h-100">
-                            <!-- Product details-->
-                            <div class="card-body p-4">
-                                <div class="text-center">
-                                    <h4 class="fw-bolder"><?php echo $slot->nomer; ?></h4>
-									<h5 class="fw-bolder"><?php echo $slot->status; ?></h5>
-                                </div>
-                            </div>
-                            <!-- Product actions-->
-                            <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="<?php echo site_url('index/beli/'.$slot->id); ?>">Buy</a></div>
-                            </div>
-                        </div>
-                    </div>
-					<?php endforeach; ?>
+                <div id="slot-list" class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
                 </div>
             </div>
         </section>
@@ -42,5 +25,29 @@
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
         <!-- Core theme JS-->
         <script src="<?php echo base_url('js/scripts.js'); ?>"></script>
+		<script>
+			const slot_list = document.getElementById('slot-list');
+			const get_slot_list = fetch('<?php echo site_url('index/get_slot'); ?>')
+			get_slot_list.then(response => response.json()).then(data=>{
+				data.forEach(slot => {
+					const show_slot = `
+					<div class="col mb-5">
+						<div class="card h-100">
+							<div class="card-body p-4">
+								<div class="text-center">
+									<h4 class="fw-bolder">${slot.nomer}</h4>
+									<h5 class="fw-bolder">${slot.status}</h5>
+								</div>
+							</div>
+							<div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
+								<div class="text-center"><a class="btn btn-outline-dark mt-auto" href="<?php echo site_url('index/beli/'); ?>${slot.id}">Buy</a></div>
+							</div>
+						</div>
+					</div>
+					`;
+					slot_list.innerHTML += show_slot;
+				});
+			});
+		</script>
     </body>
 </html>

@@ -16,14 +16,9 @@ class Index extends CI_Controller
 	}
 
 	public function index()
-	{
-		$get_slot = $this->index->get_slot();
-
-		$data = array(
-			'list_slot' => $get_slot
-		);
+	{	
 		$this->load->view('inc/header.php');
-		$this->load->view('v_index', $data);
+		$this->load->view('v_index');
 		$this->load->view('inc/footer.php');
 	}
 
@@ -39,6 +34,51 @@ class Index extends CI_Controller
 		$this->load->view('inc/footer.php');
 	}
 
+	// public function do_beli()
+	// {
+	// 	$id = $this->input->post('slot_id');
+	// 	$this->form_validation->set_rules('plat', 'Plat', 'required');
+	// 	$this->form_validation->set_rules('jenis', 'Kendaraan', 'required');
+
+	// 	if ($this->form_validation->run() == FALSE)
+	// 	{
+	// 		$get_slot = $this->index->get_slot_by_id($id);
+
+	// 		$data = array(
+	// 			'list_slot' => $get_slot
+	// 		);
+	// 		$this->load->view('inc/header.php');
+	// 		$this->load->view('v_beli', $data);
+	// 		$this->load->view('inc/footer.php');
+	// 	}
+	// 	else
+	// 	{
+	// 		$data = array(
+	// 			'plat' => $this->input->post('plat'),
+	// 			'jenis' => $this->input->post('jenis'),
+	// 			'slot_id' => $this->input->post('slot_id'),
+	// 			'jam_masuk' => date('Y-m-d H:i:s')
+	// 		);
+
+	// 		$this->index->update_status($id);
+	// 		$insert = $this->index->beli($data);
+
+	// 		if($insert == true)
+	// 		{
+	// 			$book_id = $this->orders->get_last_book_id();
+	// 			$this->session->set_flashdata('alert', 'Pembelian berhasil');
+
+	// 			redirect('orders/print/'.$book_id);
+	// 		}
+	// 		else
+	// 		{
+	// 			$this->session->set_flashdata('alert_gagal', 'Pembelian gagal');
+
+	// 			redirect('index/beli/'.$this->input->post('barang_id'));
+	// 		}
+	// 	}
+	// }
+
 	public function do_beli()
 	{
 		$id = $this->input->post('slot_id');
@@ -47,14 +87,12 @@ class Index extends CI_Controller
 
 		if ($this->form_validation->run() == FALSE)
 		{
-			$get_slot = $this->index->get_slot_by_id($id);
-
-			$data = array(
-				'list_slot' => $get_slot
+			$response = array(
+				'status' => false,
+				'errors' => validation_errors()
 			);
-			$this->load->view('inc/header.php');
-			$this->load->view('v_beli', $data);
-			$this->load->view('inc/footer.php');
+			header('Content-Type: application/json; charset=utf-8');
+			echo json_encode($response);
 		}
 		else
 		{
@@ -68,18 +106,24 @@ class Index extends CI_Controller
 			$this->index->update_status($id);
 			$insert = $this->index->beli($data);
 
-			if($insert == true)
+			if($insert == false)
 			{
-				$book_id = $this->orders->get_last_book_id();
-				$this->session->set_flashdata('alert', 'Pembelian berhasil');
-
-				redirect('orders/print/'.$book_id);
+				$response = array(
+					'status' => false,
+					'message' => 'Pembelian gagal'
+				);
+				header('Content-Type: application/json; charset=utf-8');
+				echo json_encode($response);
 			}
 			else
 			{
-				$this->session->set_flashdata('alert_gagal', 'Pembelian gagal');
-
-				redirect('index/beli/'.$this->input->post('barang_id'));
+				$response = array(
+					'status' => true,
+					'message' => 'Pembelian berhasil',
+					'id' => $insert
+				);
+				header('Content-Type: application/json; charset=utf-8');
+				echo json_encode($response);
 			}
 		}
 	}
@@ -120,6 +164,18 @@ class Index extends CI_Controller
 	{
 		$this->session->unset_userdata('logged_in');
 		redirect('index/login');
+	}
+
+	public function get_slot()
+	{
+		header('Content-Type: application/json; charset=utf-8');
+		echo json_encode($this->index->get_slot_jquery());
+	}
+
+	public function get_slot_by_id($id)
+	{
+		header('Content-Type: application/json; charset=utf-8');
+		echo json_encode($this->index->get_slot_by_id_jquery($id));
 	}
 }
 ?>
