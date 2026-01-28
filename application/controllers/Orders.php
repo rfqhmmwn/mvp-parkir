@@ -30,6 +30,50 @@ class Orders extends CI_Controller
 		$this->load->view('inc/footer.php');
 	}
 
+	public function get_book()
+	{
+		print_r($_POST);
+		$search = $_GET['search']['value'] ?? '';
+		$limit  = $_GET['length'] ?? 10;
+		$offset = $_GET['start'] ?? 0;
+
+		// Mapping kolom tabel (URUT SESUAI <th>)
+		$columns = ['id', 'slot_id', 'plat', 'jenis'];
+
+		// Ambil order index dengan aman
+		$orderIndex = $_GET['order'][0]['column'] ?? 0;
+		$orderType  = $_GET['order'][0]['dir'] ?? 'asc';
+
+		// Tentukan nama kolom dari mapping
+		$nameOrder = $columns[$orderIndex];
+
+		$records = $this->orders->getData($limit, $search, $offset, $nameOrder, $orderType);
+
+		$data = [];
+		foreach ($records['data'] as $row) {
+			$data[] = [
+				$row['id'],
+				$row['slot_id'],
+				$row['plat'],
+				$row['jenis'],
+				'
+				<a href="'.site_url('orders/selesai/'.$row['id']).'" 
+				class="btn btn-warning btn-sm"
+				onclick="return confirm(\'Konfirmasi Pembayaran?\')">Selesai</a>
+				<a href="'.site_url('orders/print/'.$row['id']).'" 
+				class="btn btn-info btn-sm">Print</a>'
+			];
+		}
+
+		echo json_encode([
+			"draw" => intval($this->input->get('draw') ?? 1),
+			"recordsTotal" => $records['recordsTotal'],
+			"recordsFiltered" => $records['recordsFiltered'],
+			"data" => $data
+		]);
+	}
+
+
 	public function selesai($id)
 	{
 		$get_booking = $this->orders->get_booking_by_id($id);

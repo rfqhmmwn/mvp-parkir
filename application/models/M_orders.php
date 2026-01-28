@@ -68,5 +68,19 @@ class M_orders extends CI_Model
 
 		return $row->id;
 	}
+
+	public function getData($limit , $search , $ofset , $nameorder , $orderType ) {
+		$this->db->where('status', 'belum');
+		$query1 = $this->db->get('booking');
+		$total = $query1->num_rows();
+
+		$this->db->where('status', 'belum');
+		$query = $this->db->get('booking');
+
+		$totalRecord = $query->result_array();
+		$filtered = $query->num_rows();
+
+		return array("recordsTotal"=>$filtered,"recordsFiltered"=>$total,'data' => $totalRecord);
+	}
 }
 ?>

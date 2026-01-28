@@ -29,7 +29,7 @@
 						</tr>
 					</thead>
 					<tbody>
-						<?php foreach($list_booking as $row): ?>
+						<!-- <?php foreach($list_booking as $row): ?>
 							<tr>
 								<td><?php echo $row->id ?></td>
 								<td><?php echo $row->slot_id ?></td>
@@ -41,7 +41,7 @@
 								</td>
 							</tr>
 							
-						<?php endforeach; ?>
+						<?php endforeach; ?> -->
 					</tbody>
 				</table>
 			</div>
@@ -50,5 +50,4 @@
 
 </div>
 <!-- /.container-fluid -->
-
 

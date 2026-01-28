@@ -62,8 +62,28 @@
 	<script src="<?= base_url('assets/js/demo/chart-pie-demo.js'); ?>"></script>
 
 	<!-- Page level custom scripts -->
-	<script src="<?= base_url('assets/js/demo/datatables-demo.js'); ?>"></script>
+	<!-- <script src="<?= base_url('assets/js/demo/datatables-demo.js'); ?>"></script> -->
 
+	<script>
+		$(document).ready(function() {
+			$('#dataTable').DataTable({
+				"processing": true,
+				"serverSide": true,
+				"ajax": {
+					"url": "<?php echo site_url('orders/get_book')?>",
+					"type": "POST"
+				},
+				"columns": [
+					{ "data": 0 },
+					{ "data": 1 },
+					{ "data": 2 },
+					{ "data": 3 },
+					{ "data": 4 }
+				],
+				"order": [[0, 'asc']]
+			});
+		});
+	</script>
 
 </body>
 
